@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <title>Herramientas de debug de Chrome</title>
+</head>
+<body>
+  <div><img src='chambordalargado.jpeg' width="65%" height="75%" alt="Castillo Chambord">
+    ></img></div>
+  <h1>Una página cualesquiera</h1>
+  <a href="http://asuntosoftware.com">¿Quieres ver mi blog sobre software?</a>
+  <p onclick="changeP()">Haz clic y el p&aacute;rrafo cambia de contenido</p><br/><br/>
+  <button onclick="loadUsers()">Cargar usuarios con XMLHttpRequest</button>
+  <button onclick="deleteUsers()">Borrar usuarios</button>
+  <p id="notify"></p>
+  <p id="users"></p>  
+</body>
+
+<script>
+  
+    function loadUsers(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://api.github.com/users', true);
+
+        xhr.onload = function(){
+          if(this.status == 200){
+            var users = JSON.parse(this.responseText);
+
+            var output = '<table>';
+            // console.table([{id:users[1].id, login:users[1].login},
+            //               {id:users[2].id, login:users[2].login}]);
+
+            // console.group('Inicio grupo'); 
+            // console.log('id ', users[1].id,' login ',users[1].login);
+            // console.log('id ', users[2].id,' login ',users[2].login);
+            // console.groupEnd('Fin grupo');
+            
+            for(var i in users){ 
+                           
+              output +=
+                '<tr>' +
+                '<td id="photo">' + '<img src="'+users[i].avatar_url+'" width="70" height="70">' + '</td>' +
+                '<td id="id">' + 'ID: '+users[i].id + '</td>' +
+                '<td id="login">' + 'Login: '+users[i].login +'</td>' ;
+                '</tr>'
+            }
+            output += '</table>'
+            document.getElementById('users').innerHTML = output;
+            
+          }
+        }
+
+        xhr.send();
+        // esto es para que se vea que el XMLHttpRequest es asincrono
+        document.getElementById('notify').innerHTML = 'Aquí vamos a ver los usuarios';
+      }
+
+      function changeP(){
+
+        let P = document.getElementsByTagName('p');
+        if (P[0].innerHTML == "Haz clic y el párrafo cambia de contenido")
+          P[0].innerHTML = "Haz clic y volver&aacute el contenido original";
+        else
+          P[0].innerHTML = "Haz clic y el p&aacute;rrafo cambia de contenido";
+      }
+
+      function deleteUsers(){
+        document.getElementById('notify').innerHTML = ""
+        document.getElementById('users').innerHTML = "";
+      }
+
+</script>
+</html>
